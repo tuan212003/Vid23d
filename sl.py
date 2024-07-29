@@ -16,8 +16,10 @@ if video_file is not None:
     # Display the video
     st.video(video_file)
     file_name = video_file.name
-VideoFolder='/content/Vid23d/ResultFolder/'
-VideoPath = VideoFolder + file_name  
+
+VideoFolder=st.text_input('Nhập file_output:')
+VideoPath = VideoFolder + file_name 
+ 
 # tracking_method = st.radio("Choose an option:", ["bbox", "pose"],index=0,horizontal=True)
 detector = st.radio("Choose an option:", ["yolo", "maskrcnn"],index=0,horizontal=True)
 # if tracking_method=='pose':
