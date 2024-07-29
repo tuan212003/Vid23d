@@ -53,8 +53,8 @@ args.detector=detector
 args.sideview=sideview
 args.smooth=smooth
 
-st.button('Creat video')
-if st.button("Click me"):
+
+if st.button('Creat video'):
     main(args)
     name = os.path.splitext(file_name)[0]
     video_output=VideoFolder+name+'/'+ name + '_vibe_result.mp4'
