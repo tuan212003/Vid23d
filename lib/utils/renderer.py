@@ -178,7 +178,7 @@ class Renderer:
         # Set camera
         ctr = vis.get_view_control()
         parameters = o3d.camera.PinholeCameraParameters()
-        parameters.intrinsic = o3d.camera.PinholeCameraIntrinsic(self.resolution[0], self.resolution[1], *intrinsics.flatten()[:9])
+        parameters.intrinsic = o3d.camera.PinholeCameraIntrinsic(self.resolution[0], self.resolution[1], intrinsics[0, 0], intrinsics[1, 1], intrinsics[0, 2], intrinsics[1, 2])
         parameters.extrinsic = extrinsics
         ctr.convert_from_pinhole_camera_parameters(parameters)
         
@@ -198,4 +198,5 @@ class Renderer:
             output_img = output_img[:, :, :-1] * valid_mask + (1 - valid_mask) * img
         
         return output_img
+
 
