@@ -1,33 +1,42 @@
 import streamlit as st
-import requests
+from demo import main
 
-# Title of the app
-st.title("Video Upload and Display App")
+st.title("Video to 3D")
 
-# Upload video file
-video_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi", "mkv"])
+uploaded_video = st.file_uploader("Choose a video...", type=["mp4", "avi", "mov"])
+st.video(uploaded_video)
 
-if st.button('Create video'):
-    if video_file is not None:
-        # URL của server Flask trên Google Colab
-        colab_url = "http://4789-34-19-110-150.ngrok-free.app/run_model"  # Thay thế bằng URL ngrok của bạn
+if uploaded_video is not None:
+    # Lưu video vào hệ thống tập tin của Colab
+    with open('/content/Vid23d/ResultFolder/video.mp4', 'wb') as f:
+        f.write(uploaded_video.getbuffer())
+    st.success("Video đã lưu thành công!")
 
-        # Gửi yêu cầu POST với tệp video
-        files = {'video_file': video_file.getvalue()}
-        response = requests.post(colab_url, files=files)
+class Args:
+    vid_file = ''
+    output_folder = ''
+    tracking_method = 'bbox'
+    detector = 'yolo'
+    yolo_img_size = 416
+    tracker_batch_size = 12
+    staf_dir = '/home/mkocabas/developments/openposetrack'
+    vibe_batch_size = 450
+    display = False
+    run_smplify = False
+    no_render = False
+    wireframe = False
+    sideview = False
+    save_obj = False
+    smooth = False
+    smooth_min_cutoff = 0.004
+    smooth_beta = 0.7
 
-        if response.status_code == 200:
-            st.success("Model execution initiated!")
+args=Args()
+args.vid_file='/content/Vid23d/ResultFolder/video.mp4'
+args.output_folder='/content/Vid23d/ResultFolder/'
 
-            # Lấy đường dẫn video kết quả từ phản hồi
-            result_video_path = response.json().get('result_video_path')
+if st.button("Tạo video 3d"):
+    main(args)
+    video_output_path='/content/Vid23d/ResultFolder/video/video_vibe_result.mp4'
+    st.video(video_output_path)
 
-            # URL để tải video từ Google Colab
-            video_url = f"http://4789-34-19-110-150.ngrok-free.app/get_video/{result_video_path}"  # Thay thế bằng URL ngrok của bạn
-
-            # Hiển thị video kết quả
-            st.video(video_url)
-        else:
-            st.error("Failed to initiate model execution")
-    else:
-        st.error("Please upload a video file before creating video.")
